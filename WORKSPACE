@@ -2,6 +2,11 @@ workspace(name = "bazel_sonatype")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# ======================================================================================================================
+# ----------------------------------------------------------------------------------------------------------------------
+# ======================================================================================================================
+# rules_jvm_external
+
 RULES_JVM_EXTERNAL_TAG = "4.2"
 
 RULES_JVM_EXTERNAL_SHA = "cd1a77b7b02e8e008439ca76fd34f5b07aecb8c752961f9640dea15e9e5ba1ca"
@@ -13,9 +18,13 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/{}.zip".format(RULES_JVM_EXTERNAL_TAG),
 )
 
+# ----------------------------------------------------------------------------------------------------------------------
 load("@bazel_sonatype//:defs.bzl", "sonatype_dependencies")
 
 sonatype_dependencies()
+
+# ======================================================================================================================
+# bazel_skylib
 
 BAZEL_SKYLIB_TAG = "1.2.0"
 
@@ -24,27 +33,40 @@ BAZEL_SKYLIB_SHA = "af87959afe497dc8dfd4c6cb66e1279cb98ccc84284619ebfec27d9c09a9
 http_archive(
     name = "bazel_skylib",
     sha256 = BAZEL_SKYLIB_SHA,
-    type = "tar.gz",
     url = "https://github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib-{}.tar.gz".format(BAZEL_SKYLIB_TAG, BAZEL_SKYLIB_TAG),
 )
 
+# ======================================================================================================================
+# rules_python - required by com_google_protobuf
+
+RULES_PYTHON_TAG = "0.6.0"
+
+RULES_PYTHON_SHA = "a30abdfc7126d497a7698c29c46ea9901c6392d6ed315171a6df5ce433aa4502"
+
 http_archive(
     name = "rules_python",
-    sha256 = "a30abdfc7126d497a7698c29c46ea9901c6392d6ed315171a6df5ce433aa4502",
-    strip_prefix = "rules_python-0.6.0",
-    url = "https://github.com/bazelbuild/rules_python/archive/0.6.0.tar.gz",
+    sha256 = RULES_PYTHON_SHA,
+    strip_prefix = "rules_python-{}".format(RULES_PYTHON_TAG),
+    url = "https://github.com/bazelbuild/rules_python/archive/{}.tar.gz".format(RULES_PYTHON_TAG),
 )
+
+# ======================================================================================================================
+# zlib - required by com_google_protobuf
+
+ZLIB_TAG = "1.2.11"
+
+ZLIB_SHA = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1"
 
 http_archive(
     name = "zlib",
     build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
-    sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
-    strip_prefix = "zlib-1.2.11",
-    urls = [
-        "https://mirror.bazel.build/zlib.net/zlib-1.2.11.tar.gz",
-        "https://zlib.net/zlib-1.2.11.tar.gz",
-    ],
+    sha256 = ZLIB_SHA,
+    strip_prefix = "zlib-{}".format(ZLIB_TAG),
+    url = "https://zlib.net/zlib-{}.tar.gz".format(ZLIB_TAG),
 )
+
+# ======================================================================================================================
+# com_google_protobuf -  required by io_bazel_rules_scala
 
 COM_GOOGLE_PROTOBUF_TAG = "3.19.4"
 
@@ -57,22 +79,31 @@ http_archive(
     url = "https://github.com/protocolbuffers/protobuf/archive/v{}.tar.gz".format(COM_GOOGLE_PROTOBUF_TAG),
 )
 
+# ======================================================================================================================
+# io_bazel_rules_scala
+
+IO_BAZEL_RULES_SCALA_TAG = "20220201"
+
+IO_BAZEL_RULES_SCALA_SHA = "77a3b9308a8780fff3f10cdbbe36d55164b85a48123033f5e970fdae262e8eb2"
+
 http_archive(
     name = "io_bazel_rules_scala",
-    url = "https://github.com/bazelbuild/rules_scala/releases/download/20220201/rules_scala-20220201.zip",
-    type = "zip",
-    strip_prefix = "rules_scala-20220201",
-    sha256 = "77a3b9308a8780fff3f10cdbbe36d55164b85a48123033f5e970fdae262e8eb2",
+    sha256 = IO_BAZEL_RULES_SCALA_SHA,
+    strip_prefix = "rules_scala-{}".format(IO_BAZEL_RULES_SCALA_TAG),
+    url = "https://github.com/bazelbuild/rules_scala/releases/download/{}/rules_scala-{}.zip".format(IO_BAZEL_RULES_SCALA_TAG, IO_BAZEL_RULES_SCALA_TAG),
 )
 
-# Stores Scala version and other configuration
-# 2.12 is a default version, other versions can be use by passing them explicitly:
-# scala_config(scala_version = "2.11.12")
+# ----------------------------------------------------------------------------------------------------------------------
 load("@io_bazel_rules_scala//:scala_config.bzl", "scala_config")
+
 scala_config()
 
-load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
-scala_repositories()
-
+# ----------------------------------------------------------------------------------------------------------------------
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+
 scala_register_toolchains()
+
+# ----------------------------------------------------------------------------------------------------------------------
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+
+scala_repositories()
