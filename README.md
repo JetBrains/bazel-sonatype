@@ -14,8 +14,12 @@ A set of rules for publishing your project to the Maven Central repository throu
     
 ## Configurations
 In the Workspace file, the following must be added in order install:
-- [rules_scala](https://github.com/bazelbuild/rules_scala)
 - [rules_jvm_external](https://github.com/bazelbuild/rules_jvm_external)
+- [bazel_skylib](https://github.com/bazelbuild/bazel-skylib)
+- [rules_python](https://github.com/bazelbuild/rules_python)
+- [zlib](https://zlib.net)
+- [com_google_protobuf](https://github.com/protocolbuffers/protobuf)
+- [rules_scala](https://github.com/bazelbuild/rules_scala)
 
 
 ```python
