@@ -129,12 +129,11 @@ scala_repositories()
 
 # ======================================================================================================================
 
-#TODO: Change this to the proper version
-BAZEL_SONATYPE_TAG = "28894f9ad6373a657ab4a395c8e7342277722347"
+BAZEL_SONATYPE_TAG = "0.0.1"
 http_archive(
     name = "bazel_sonatype",
-    strip_prefix = "bazel-sonatype-%s" % BAZEL_SONATYPE_TAG,
-    url = "https://github.com/JetBrains/bazel-sonatype/archive/%s.zip" % BAZEL_SONATYPE_TAG,
+    strip_prefix = "bazel-sonatype-{}".format(BAZEL_SONATYPE_TAG),
+    url = "https://github.com/JetBrains/bazel-sonatype/archive/{}.zip".format(BAZEL_SONATYPE_TAG),
 )
 
 load("@bazel_sonatype//:defs.bzl", "sonatype_dependencies")
