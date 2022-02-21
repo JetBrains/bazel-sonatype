@@ -18,6 +18,8 @@ project/plugins/project/
 
 src/sbt-test/*/*/bin/.lib
 
-bazel-*/
+bazel-*
 .bazelbsp
 .bsp
+
+.DS_Store
